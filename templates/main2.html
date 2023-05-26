@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="m-5">
+      <h3 class="text-center" onclick="location.href='/'">Coin_Market</h3>
+    </div>
+
+    <div class="d-block">
+      <p class="text-right mt-3">{{username}} 님</p>
+      <table>
+        <tbody>
+          {% for st in user_query %}
+          <tr>
+            <td>보유 코인: {{st.u_coin}}</td>
+            <td>보유 금액: {{st.u_cash}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button
+        type="button"
+        href="{{ url_for('logout') }}"
+        class="btn btn-light float-right"
+        onclick="location.href='/logout'"
+      >
+        로그아웃
+      </button>
+
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" onclick="location.href='/upload'">업로드</a>
+        </li>
+      </ul>
+
+      <div class="row mt-4">
+        {% for st in product_query %}
+        <div class="card col-6 border-0">
+          <div class="card-body">
+            <h5 class="card-title">{{ st.m_name }}</h5>
+            <p class="card-text">{{ st.m_price }} 원</p>
+            <p class="card-text">{{ st.m_coin }} 개</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>

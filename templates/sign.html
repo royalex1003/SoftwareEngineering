@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <h3 class="m-5 text-center" onclick="location.href='/'">Coin_Market</h3>
+    <h5 class="mt-4 mb-2 text-center">회원 가입</h5>
+    <hr />
+    <div>
+      <form
+        style="width: 350px; margin: 5 auto"
+        action="{{ url_for('sign') }}"
+        method="POST"
+      >
+        <div class="form-group">
+          <label for="exampleInputEmail1">아이디</label>
+          <input
+            type="text"
+            name="id"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">비밀번호</label>
+          <input
+            type="password"
+            name="pw"
+            class="form-control"
+            id="exampleInputPassword1"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputName1">이름</label>
+          <input
+            type="text"
+            name="nm"
+            class="form-control"
+            id="exampleInputName1"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputName1">소지금</label>
+          <input
+            type="text"
+            name="cash"
+            value="0"
+            class="form-control"
+            id="exampleInputCash"
+            readonly
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputName1">보유코인</label>
+          <input
+            type="text"
+            name="coin"
+            value="0"
+            class="form-control"
+            id="exampleInputCoin"
+            readonly
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="exampleInputPassword1"></label>
+          <input
+            type="hidden"
+            name="name"
+            value="2023_소프트공학설계_coin"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="exampleInputPassword1"></label>
+          <input type="hidden" name="price" value="100" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputName1"></label>
+          <input type="hidden" name="many" value="100" class="form-control" />
+        </div>
+
+        <input
+          type="submit"
+          value="회원가입"
+          class="btn btn-link float-right"
+        />
+      </form>
+    </div>
+  </body>
+</html>
