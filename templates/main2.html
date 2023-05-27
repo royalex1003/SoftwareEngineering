@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <script>
+                alert("{{ messages[0] }}");
+            </script>
+        {% endif %}
+    {% endwith %}
     <div class="m-5">
       <h3 class="text-center" onclick="location.href='/'">Coin_Market</h3>
     </div>
@@ -22,6 +29,13 @@
           {% endfor %}
         </tbody>
       </table>
+      <button
+        type="button"
+        class="btn btn-light float-right"
+        onclick="location.href='/update_cash_input'"
+      >
+      입/출금
+      </button>
       <button
         type="button"
         href="{{ url_for('logout') }}"
