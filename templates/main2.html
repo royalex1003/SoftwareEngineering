@@ -6,13 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <script>
-                alert("{{ messages[0] }}");
-            </script>
-        {% endif %}
-    {% endwith %}
     <div class="m-5">
       <h3 class="text-center" onclick="location.href='/'">Coin_Market</h3>
     </div>
@@ -29,13 +22,6 @@
           {% endfor %}
         </tbody>
       </table>
-      <button
-        type="button"
-        class="btn btn-light float-right"
-        onclick="location.href='/update_cash_input'"
-      >
-      입/출금
-      </button>
       <button
         type="button"
         href="{{ url_for('logout') }}"
@@ -55,10 +41,16 @@
         {% for st in product_query %}
         <div class="card col-6 border-0">
           <div class="card-body">
-            <h5 class="card-title">{{ st.m_name }}</h5>
-            <p class="card-text">{{ st.m_price }} 원</p>
-            <p class="card-text">{{ st.m_coin }} 개</p>
+            <h5 class="card-title">판매자: {{ st.m_seller }}</h5>
+            <h5 class="card-title">코인이름: {{ st.m_name }}</h5>
+            <p class="card-text">가격: {{ st.m_price }} 원</p>
+            <p class="card-text">갯수: {{ st.m_coin }} 개</p>
           </div>
+          <a
+            class="btn btn-outline-success float-right"
+            href="{{ url_for('purchase', m_name = st.m_name, m_seller = st.m_seller) }}"
+            >구매하기</a
+          >
         </div>
         {% endfor %}
       </div>
