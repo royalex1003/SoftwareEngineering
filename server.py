@@ -202,14 +202,14 @@ def purchase(m_name, m_seller):
 @app.route("/update_cash_input")
 def update_cash_input():
     user = User_Class.query.filter_by(u_id=session["username"]).first()
-    return render_template('money_update.html', current_cash = user.u_cash)
+    return render_template("money_update.html", current_cash=user.u_cash)
 
 
 @app.route("/update_cash", methods=["POST"])
 def update_cash():
-    if(request.form["amount"] == ""):
+    if request.form["amount"] == "":
         flash("금액이 입력되지 않았습니다.", "error")
-        return redirect(url_for('update_cash_input'))
+        return redirect(url_for("update_cash_input"))
     else:
         amount = int(request.form["amount"])  # 입력된 금액 값 가져오기
         action = request.form["action"]  # 버튼의 액션 값 가져오기
@@ -217,7 +217,7 @@ def update_cash():
             # Deposit 버튼을 클릭한 경우
             if "username" in session:
                 user = User_Class.query.filter_by(u_id=session["username"]).first()
-                current_cash = int(user.u_cash) 
+                current_cash = int(user.u_cash)
                 current_cash += amount
                 user.u_cash = current_cash
                 db.session.commit()
@@ -231,9 +231,9 @@ def update_cash():
             # Withdraw 버튼을 클릭한 경우
             if "username" in session:
                 user = User_Class.query.filter_by(u_id=session["username"]).first()
-                current_cash = int(user.u_cash) 
+                current_cash = int(user.u_cash)
                 if current_cash >= amount:
-                    current_cash = int(user.u_cash) 
+                    current_cash = int(user.u_cash)
                     current_cash -= amount
                     user.u_cash = current_cash
                     db.session.commit()
@@ -244,7 +244,7 @@ def update_cash():
                     return redirect(url_for("main"))
             else:
                 flash("로그인이 필요합니다.", "error")
-                return redirect(url_for("login"))    
+                return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
