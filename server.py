@@ -8,6 +8,7 @@ from flask import (
     session,
 )
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -48,6 +49,22 @@ class Market_Class(db.Model):
         self.m_price = price
         self.m_coin = many
         self.m_seller = seller
+
+class Transaction_Class(db.Model):
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    price = db.Column(db.Float)
+    timestamp = db.Column(db.DateTime)
+
+    def __init__(self, price, timestamp):
+        self.price = price
+        self.timestamp = timestamp
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "price": self.price,
+            "timestamp": self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+        }
 
 
 @app.before_request
@@ -188,8 +205,13 @@ def purchase(m_name, m_seller):
                     seller.u_cash += result.m_price
                     buyer.u_coin += result.m_coin
 
+                    transaction_price = result.m_price
                     result = Market_Class.query.filter_by(m_name=m_name).delete()
+                    db.session.commit()
 
+                    transaction = Transaction_Class(
+                        price=transaction_price, timestamp=datetime.now())
+                    db.session.add(transaction)
                     db.session.commit()
 
                     return redirect(url_for("main"))
@@ -245,6 +267,12 @@ def update_cash():
             else:
                 flash("로그인이 필요합니다.", "error")
                 return redirect(url_for("login"))
+            
+@app.route("/coin_price_history", methods=["GET"])
+def coin_price_history():
+    data = Transaction_Class.query.all()
+    data_dicts = [transaction.to_dict() for transaction in data]
+    return render_template("coin_price_history.html", data=data_dicts)
 
 
 if __name__ == "__main__":
