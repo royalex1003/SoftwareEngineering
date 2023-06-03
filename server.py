@@ -174,25 +174,50 @@ def upload():
         ):
             flash("Please enter all the fields", "error")
         else:
-            coin = Market_Class(
-                request.form["name"],
-                request.form["price"],
-                request.form["coin"],
-                session["username"],
-            )
+            username = session["username"]
+            user = User_Class.query.filter_by(u_id=username).first()
+            upload_coin = int(request.form["coin"])
+            upload_price = int(request.form["price"])
 
-            db.session.add(coin)
-            db.session.commit()
-            return redirect(url_for("main"))
+
+            if upload_coin <= user.u_coin:
+                coin = Market_Class(
+                    request.form["name"],
+                    request.form["price"],
+                    request.form["coin"],
+                    session["username"],
+                )
+
+                db.session.add(coin)
+
+                user.u_coin -= upload_coin
+                db.session.commit()
+                return redirect(url_for("main"))
+            else:
+                flash("You don't have enough coins to upload", "error")
+                return render_template("upload.html", username=session["username"])
+
     return render_template("upload.html", username=session["username"])
 
+@app.route("/cancel_sale/<int:id>", methods=["POST"])
+def cancel_sale(id):
+    username = session["username"]
+    canceled_coin = Market_Class.query.filter_by(id=id).first()
+    if username == canceled_coin.m_seller:
+        seller = User_Class.query.filter_by(u_id=username).first()
+        seller.u_coin += canceled_coin.m_coin
 
-@app.route("/purchase/<m_name>/<m_seller>", methods=["GET", "POST"])
-def purchase(m_name, m_seller):
+        db.session.delete(canceled_coin)
+        db.session.commit()
+
+    return redirect(url_for("main"))
+
+@app.route("/purchase/<int:id>/<m_seller>", methods=["GET", "POST"])
+def purchase(id, m_seller):
     if request.method == "POST":
         return redirect(url_for("search", word=request.form["search"]))
     else:
-        result = Market_Class.query.filter_by(m_name=m_name).first()
+        result = Market_Class.query.filter_by(id=id).first()
 
         seller = User_Class.query.filter_by(u_id=m_seller).first()
 
@@ -201,9 +226,9 @@ def purchase(m_name, m_seller):
             buyer = User_Class.query.filter_by(u_id=session["username"]).first()
 
             if buyer.u_id != seller.u_id:
-                if buyer.u_cash >= result.m_price:
-                    buyer.u_cash -= result.m_price
-                    seller.u_cash += result.m_price
+                if buyer.u_cash >= result.m_price * result.m_coin:
+                    buyer.u_cash -= result.m_price * result.m_coin
+                    seller.u_cash += result.m_price * result.m_coin
                     buyer.u_coin += result.m_coin
 
                     transaction_price = result.m_price

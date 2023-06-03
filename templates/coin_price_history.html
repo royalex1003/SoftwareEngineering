@@ -13,18 +13,24 @@
         width: 100%;
         height: 100%;
       }
+      h3, span {
+        display: inline;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   </head>
   <body>
     <h3>coin price history chart</h3>
+    <span id="current" style="position: absolute; right: 30px; font-size: 20px;"></span>
     <div id="chartContainer">
       <canvas id="coinChart" canvas></canvas>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         let data = JSON.parse('{{ data|tojson|safe }}');
+        let currentPrice = data[data.length - 1].price;
+        document.getElementById("current").innerText = `current coin price: ${currentPrice}`;
         let now = new Date();
         let threeHoursBefore = now - 3 * 60 * 60 * 1000;
         console.log(data);
