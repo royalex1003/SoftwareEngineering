@@ -23,7 +23,7 @@
             <canvas id="coinChart" canvas></canvas>
         </div>
         <script>
-            document.addEventListener("DOMContentLoaded", () => {
+            document.addEventListener("DOMContentLoaded", function() {
                 let data = JSON.parse('{{ data|tojson|safe }}');
                 let now = new Date();
                 let threeHoursBefore = (now - 3 * 60 * 60 * 1000);
