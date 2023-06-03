@@ -50,6 +50,7 @@ class Market_Class(db.Model):
         self.m_coin = many
         self.m_seller = seller
 
+
 class Transaction_Class(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     price = db.Column(db.Float)
@@ -63,7 +64,7 @@ class Transaction_Class(db.Model):
         return {
             "id": self.id,
             "price": self.price,
-            "timestamp": self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            "timestamp": self.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
 
@@ -206,11 +207,14 @@ def purchase(m_name, m_seller):
                     buyer.u_coin += result.m_coin
 
                     transaction_price = result.m_price
-                    result = Market_Class.query.filter_by(m_name=m_name).delete()
+                    result = Market_Class.query.filter_by(
+                        m_price=result.m_price
+                    ).delete()
                     db.session.commit()
 
                     transaction = Transaction_Class(
-                        price=transaction_price, timestamp=datetime.now())
+                        price=transaction_price, timestamp=datetime.now()
+                    )
                     db.session.add(transaction)
                     db.session.commit()
 
@@ -267,7 +271,8 @@ def update_cash():
             else:
                 flash("로그인이 필요합니다.", "error")
                 return redirect(url_for("login"))
-            
+
+
 @app.route("/coin_price_history", methods=["GET"])
 def coin_price_history():
     data = Transaction_Class.query.all()

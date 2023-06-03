@@ -1,67 +1,86 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width-width, initial-scale=1.0">
-        <style>
-            #chartContainer {
-                width: 80%; /* 80%는 설정된 값이며, 원하는 비율로 변경 가능 */
-                height: 80%;
- margin: 0 auto;
-            }
-            canvas {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    </head>
-    <body>
-        <h3>coin price history chart</h3>
-        <div id="chartContainer">
-            <canvas id="coinChart" canvas></canvas>
-        </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let data = JSON.parse('{{ data|tojson|safe }}');
-                let now = new Date();
-                let threeHoursBefore = (now - 3 * 60 * 60 * 1000);
-                console.log(data);
-                let ctx = document.getElementById("coinChart").getContext("2d");
-                let chartData = {
-                    labels: data.map((transaction) => new Date(transaction.timestamp)),
-                    datasets: [{ label: "coin price", data: data.map((transaction) => transaction.price), borderColor: "rgba(75, 192, 192, 1)", backgroundColor: "rgba(75, 192, 192, 0.2)" }],};
-                let coinChart = new Chart(ctx, {
-                    type: "line",
-                    data: chartData,
-                    options: {
-                        scales: {
-                            x: {
-                                axis: "x", 
-                                type: "time", 
-                                adapters: { date: { library: "date-fns" } }, 
-                                ticks: {
-                                    stepSize: 10,
-                                    callback: function(value, index, values) { 
-                                        let dateValue = new Date(value);
-                                        dateValue.setMinutes(dateValue.getMinutes()-dateValue.getMinutes()%10);                                        
-                                        console.log(dateValue);
-                                        opt={month: 'short', day: 'numeric',
-                                            hour: '2-digit', minute: '2-digit',
-                                            hour12: false};
-                                        return new Intl.DateTimeFormat('en-US', opt).format(dateValue);
-                                    },
-                                }, 
-                                time: { unit: "minute", displayFormats: { minute: "MMM d, hh:mm" } },
-                                min: threeHoursBefore-(threeHoursBefore%10),
-                                max: now 
-                            },
-                            y: { type: "linear", min: 0, max: 200 },
-                        },
-                    },
-                });
-            });
-        </script>
-    </body>
+  <head>
+    <meta name="viewport" content="width-width, initial-scale=1.0" />
+    <style>
+      #chartContainer {
+        width: 80%; /* 80%는 설정된 값이며, 원하는 비율로 변경 가능 */
+        height: 80%;
+        margin: 0 auto;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  </head>
+  <body>
+    <h3>coin price history chart</h3>
+    <div id="chartContainer">
+      <canvas id="coinChart" canvas></canvas>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let data = JSON.parse('{{ data|tojson|safe }}');
+        let now = new Date();
+        let threeHoursBefore = now - 3 * 60 * 60 * 1000;
+        console.log(data);
+        let ctx = document.getElementById("coinChart").getContext("2d");
+        let chartData = {
+          labels: data.map((transaction) => new Date(transaction.timestamp)),
+          datasets: [
+            {
+              label: "coin price",
+              data: data.map((transaction) => transaction.price),
+              borderColor: "rgba(75, 192, 192, 1)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+            },
+          ],
+        };
+        let coinChart = new Chart(ctx, {
+          type: "line",
+          data: chartData,
+          options: {
+            scales: {
+              x: {
+                axis: "x",
+                type: "time",
+                adapters: { date: { library: "date-fns" } },
+                ticks: {
+                  stepSize: 10,
+                  callback: function (value, index, values) {
+                    let dateValue = new Date(value);
+                    dateValue.setMinutes(
+                      dateValue.getMinutes() - (dateValue.getMinutes() % 10)
+                    );
+                    console.log(dateValue);
+                    opt = {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    };
+                    return new Intl.DateTimeFormat("en-US", opt).format(
+                      dateValue
+                    );
+                  },
+                },
+                time: {
+                  unit: "minute",
+                  displayFormats: { minute: "MMM d, hh:mm" },
+                },
+                min: threeHoursBefore - (threeHoursBefore % 10),
+                max: now,
+              },
+              y: { type: "linear", min: 0, max: 200 },
+            },
+          },
+        });
+      });
+    </script>
+  </body>
 </html>
