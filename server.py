@@ -39,13 +39,11 @@ class User_Class(db.Model):
 
 class Market_Class(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
-    m_name = db.Column(db.String(50))
     m_price = db.Column(db.Integer)
     m_coin = db.Column(db.Integer)
     m_seller = db.Column(db.String(50))
 
-    def __init__(self, name, price, many, seller):
-        self.m_name = name
+    def __init__(self, price, many, seller):
         self.m_price = price
         self.m_coin = many
         self.m_seller = seller
@@ -72,14 +70,13 @@ class Transaction_Class(db.Model):
 def perform_initial_setup():
     with app.app_context():
         # 초기 설정 데이터를 추가합니다.
-        if not Market_Class.query.first():
+        if not Transaction_Class.query.first():
             # 시장 기본 설정코인
-            name = "2023소프트웨어공학설계"
             seller = "Market"
             price = 100
             many = 100
 
-            model = Market_Class(name=name, price=price, many=many, seller=seller)
+            model = Market_Class(price=price, many=many, seller=seller)
             db.session.add(model)
             db.session.commit()
 
@@ -168,8 +165,7 @@ def logout():
 def upload():
     if request.method == "POST":
         if (
-            not request.form["name"]
-            or not request.form["price"]
+            not request.form["price"]
             or not request.form["coin"]
         ):
             flash("Please enter all the fields", "error")
@@ -177,11 +173,9 @@ def upload():
             username = session["username"]
             user = User_Class.query.filter_by(u_id=username).first()
             upload_coin = int(request.form["coin"])
-            upload_price = int(request.form["price"])
 
             if upload_coin <= user.u_coin:
                 coin = Market_Class(
-                    request.form["name"],
                     request.form["price"],
                     request.form["coin"],
                     session["username"],
