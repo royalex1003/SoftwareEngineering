@@ -104,16 +104,21 @@
               <p class="card-text">가격: {{ st.m_price }} 원</p>
               <p class="card-text">갯수: {{ st.m_coin }} 개</p>
             </div>
-            <a
-              class="btn btn-success"
-              href="{{ url_for('purchase', id = st.id, m_seller = st.m_seller) }}"
-              >구매하기</a
-            >
-            {% if username == st.m_seller %}
-            <form action="{{ url_for('cancel_sale', id=st.id) }}" method="POST">
-              <input type="submit" value="취소" class="btn btn-danger">
-            </form>
-            {% endif %}
+
+            <div class="col">
+              <a
+                class="btn btn-success"
+                href="{{ url_for('purchase', id = st.id, m_seller = st.m_seller) }}"
+                >구매하기</a
+              >
+              
+              {% if username == st.m_seller %}
+              <form action="{{ url_for('cancel_sale', id=st.id) }}" method="POST">
+                <br>
+                <input type="submit" value="취소" class="btn btn-success">
+              </form>
+              {% endif %}
+            </div>
             <br />
           </div>
           {% endfor %}

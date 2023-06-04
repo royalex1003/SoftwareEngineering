@@ -22,8 +22,8 @@ class User_Class(db.Model):
     u_id = db.Column(db.String(20))
     u_pw = db.Column(db.String(20))
     u_name = db.Column(db.String(20))
-    u_cash = db.Column(db.Float)
-    u_coin = db.Column(db.Float)
+    u_cash = db.Column(db.Integer)
+    u_coin = db.Column(db.Integer)
     u_value = []
 
     def __init__(self, id, pw, nm, cash, coin):
@@ -40,8 +40,8 @@ class User_Class(db.Model):
 class Market_Class(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     m_name = db.Column(db.String(50))
-    m_price = db.Column(db.Float)
-    m_coin = db.Column(db.Float)
+    m_price = db.Column(db.Integer)
+    m_coin = db.Column(db.Integer)
     m_seller = db.Column(db.String(50))
 
     def __init__(self, name, price, many, seller):
@@ -53,7 +53,7 @@ class Market_Class(db.Model):
 
 class Transaction_Class(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
-    price = db.Column(db.Float)
+    price = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime)
 
     def __init__(self, price, timestamp):
@@ -179,7 +179,6 @@ def upload():
             upload_coin = int(request.form["coin"])
             upload_price = int(request.form["price"])
 
-
             if upload_coin <= user.u_coin:
                 coin = Market_Class(
                     request.form["name"],
@@ -199,6 +198,7 @@ def upload():
 
     return render_template("upload.html", username=session["username"])
 
+
 @app.route("/cancel_sale/<int:id>", methods=["POST"])
 def cancel_sale(id):
     username = session["username"]
@@ -211,6 +211,7 @@ def cancel_sale(id):
         db.session.commit()
 
     return redirect(url_for("main"))
+
 
 @app.route("/purchase/<int:id>/<m_seller>", methods=["GET", "POST"])
 def purchase(id, m_seller):
