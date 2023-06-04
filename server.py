@@ -70,7 +70,7 @@ class Transaction_Class(db.Model):
 def perform_initial_setup():
     with app.app_context():
         # 초기 설정 데이터를 추가합니다.
-        if not Transaction_Class.query.first():
+        if not Market_Class.query.first() and not Transaction_Class.query.first():
             # 시장 기본 설정코인
             seller = "Market"
             price = 100
